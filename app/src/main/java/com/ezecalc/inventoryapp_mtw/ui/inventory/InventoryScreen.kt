@@ -1,10 +1,13 @@
 package com.ezecalc.inventoryapp_mtw.ui.inventory
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,11 +17,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ezecalc.inventoryapp_mtw.data.model.Product
+import com.ezecalc.inventoryapp_mtw.ui.theme.DeleteButton100
+import com.ezecalc.inventoryapp_mtw.ui.theme.EditButton100
+import com.ezecalc.inventoryapp_mtw.ui.theme.LihtGray40
+import com.ezecalc.inventoryapp_mtw.ui.theme.Pink40
+import com.ezecalc.inventoryapp_mtw.ui.theme.PurpleGrey40
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -71,7 +80,15 @@ fun InventoryScreen(
                 ) {
                     items(inventoryItems.value.size) { index ->
                         val item = inventoryItems.value[index]
-                        InventoryItemRow(item)
+                        InventoryItemRow(
+                            item = item,
+                            onEdit = { editedItem ->
+                                // Lógica para modificar el item
+                            },
+                            onDelete = { deletedItem ->
+                                // Lógica para eliminar el item
+                            }
+                        )
                     }
                 }
             }
@@ -81,23 +98,78 @@ fun InventoryScreen(
 }
 
 @Composable
-fun InventoryItemRow(item: InventoryItem) {
+fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDelete: (InventoryItem) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
+                .background(color = LihtGray40)
                 .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+
         ) {
-            Text(text = item.nombre, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${item.cantidad}", style = MaterialTheme.typography.bodyLarge)
+            // Nombre y cantidad del producto en un Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = item.nombre, style = MaterialTheme.typography.titleMedium)
+                Text(text = "${item.cantidad}", style = MaterialTheme.typography.titleMedium)
+            }
+
+            // Espacio vacío para empujar los botones hacia abajo
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Row para los botones Modificar y Eliminar
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Botón de Modificar (azul)
+                Button(
+                    onClick = { onEdit(item) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = EditButton100
+                    ),
+                    modifier = Modifier
+                        .height(36.dp)
+                        .padding(vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small // Borde redondeado pequeño
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Create,
+                        contentDescription = "Modificar",
+                        tint = Color.White
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp)) // Espacio entre los botones
+
+                Button(
+                    onClick = { onDelete(item) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = DeleteButton100
+                    ),
+                    modifier = Modifier
+                        .height(36.dp)
+                        .padding(vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small // Borde redondeado pequeño
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Eliminar",
+                        tint = Color.White // Icono blanco
+                    )
+                }
+            }
         }
     }
 }
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
