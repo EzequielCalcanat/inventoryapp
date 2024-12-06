@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.ezecalc.inventoryapp_mtw.ui.MainScreen
 import com.ezecalc.inventoryapp_mtw.ui.home.HomeScreen
 import com.ezecalc.inventoryapp_mtw.ui.theme.InventoryApp_MTWTheme
@@ -12,10 +17,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-            InventoryApp_MTWTheme {
-                MainScreen()
-            }
+            AppContent()
         }
     }
 }
+
+@Composable
+fun AppContent() {
+    // Aquí manejamos el estado del tema
+    var isDarkThemeEnabled by remember { mutableStateOf(false) }
+
+    // Aplicamos el tema
+    InventoryApp_MTWTheme(darkTheme = isDarkThemeEnabled) {
+        MainScreen(
+            isDarkThemeEnabled = isDarkThemeEnabled,
+            onThemeChange = { isDarkThemeEnabled = it }
+        )
+    }
+}
+
+

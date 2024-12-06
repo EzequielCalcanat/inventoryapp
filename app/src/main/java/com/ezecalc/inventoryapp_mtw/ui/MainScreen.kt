@@ -16,20 +16,20 @@ import com.ezecalc.inventoryapp_mtw.ui.inventory.InventoryScreen
 import com.ezecalc.inventoryapp_mtw.ui.settings.SettingsScreen
 
 @Composable
-fun MainScreen(){
+fun MainScreen(isDarkThemeEnabled: Boolean, onThemeChange: (Boolean) -> Unit){
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { NavigationAppBar(navController)},
+        bottomBar = { NavigationAppBar(navController) },
         topBar = { TopBar(title = "Inicio") }
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
-        ){
-            composable(Screen.Home.route){ HomeScreen() }
-            composable(Screen.Profile.route){ InventoryScreen(viewModel() ) }
-            composable(Screen.Settings.route){ SettingsScreen( ) }
+        ) {
+            composable(Screen.Home.route) { HomeScreen() }
+            composable(Screen.Profile.route) { InventoryScreen(viewModel()) }
+            composable(Screen.Settings.route) { SettingsScreen(isDarkThemeEnabled = isDarkThemeEnabled, onThemeChange = onThemeChange) }
         }
     }
 }

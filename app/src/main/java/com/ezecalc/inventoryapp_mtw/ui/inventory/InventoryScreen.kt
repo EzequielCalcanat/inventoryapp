@@ -1,6 +1,8 @@
 package com.ezecalc.inventoryapp_mtw.ui.inventory
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,10 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ezecalc.inventoryapp_mtw.data.model.Product
+import com.ezecalc.inventoryapp_mtw.ui.theme.DarkGray40
 import com.ezecalc.inventoryapp_mtw.ui.theme.DeleteButton100
 import com.ezecalc.inventoryapp_mtw.ui.theme.EditButton100
 import com.ezecalc.inventoryapp_mtw.ui.theme.LihtGray40
@@ -107,7 +111,6 @@ fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDel
     ) {
         Column(
             modifier = Modifier
-                .background(color = LihtGray40)
                 .padding(16.dp)
                 .fillMaxWidth()
 
@@ -214,19 +217,17 @@ fun AddProductForm(
                 // Dropdown con ExposedDropdownMenuBox
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = { expanded = it } // Solo cambia el estado cuando se hace clic
+                    onExpandedChange = { expanded = it }
                 ) {
                     OutlinedTextField(
                         value = codigo_barras,
                         onValueChange = {
-                            // Solo actualizamos el texto, no cambiamos expanded directamente
                             codigo_barras = it
                         },
                         label = { Text("Código de Barras") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor(),
-                        // Cuando el usuario toca el campo, solo entonces se abre el dropdown
                         readOnly = false
                     )
                     ExposedDropdownMenu(
@@ -235,20 +236,31 @@ fun AddProductForm(
                     ) {
                         filteredProducts.forEach { product ->
                             DropdownMenuItem(
-                                text = { Text(product.nombre) },  // Mostrar nombre del producto
+                                text = { Text(product.nombre) },
                                 onClick = {
-                                    // Al seleccionar el item, llenamos los campos
                                     codigo_barras = product.codigo_barras
-                                    cantidad = product.cantidad.toString()
                                     descripcion = product.descripcion
                                     nombre = product.nombre
                                     isUpdate = true
-                                    expanded = false // Cerramos el dropdown después de seleccionar
+                                    expanded = false
                                 }
                             )
                         }
                     }
                 }
+                Text(
+                    text = "Escanear Código de barras",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                        .clickable {
+
+                            println("Hola")
+                        },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.End
+                )
 
                 // Campos de entrada para la cantidad, descripción y nombre
                 OutlinedTextField(

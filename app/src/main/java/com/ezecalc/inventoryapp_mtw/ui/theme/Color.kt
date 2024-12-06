@@ -14,3 +14,4 @@ val DeleteButton100 = Color(0xFF3f1a86)
 val EditButton100 = Color(0xFF1a7486)
 
 val LihtGray40 = Color(0xFFF3F3F3)
+val DarkGray40 = Color(0xFF505050)  // Color para el modo oscuro
