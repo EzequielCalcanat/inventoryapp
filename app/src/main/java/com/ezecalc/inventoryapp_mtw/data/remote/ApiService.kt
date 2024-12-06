@@ -21,4 +21,8 @@ interface ApiService {
     // Obtener un producto específico por ID
     @GET("/products/{id}")
     suspend fun getProductById(@Path("id") id: String): Response<Product>
+
+    // Eliminar Producto
+    @DELETE("/products/{id}")
+    suspend fun deleteProduct(@Path("id") id: String): Response<Void>
 }

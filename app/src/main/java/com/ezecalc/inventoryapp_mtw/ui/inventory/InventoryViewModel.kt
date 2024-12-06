@@ -68,6 +68,16 @@ class InventoryViewModel : ViewModel() {
         }
     }
 
+    // Actualizar un producto en la lista
+    fun deleteProduct(productId: String) {
+        viewModelScope.launch {
+            val isSuccess = productRepository.deleteProduct(productId)
+            if (isSuccess) {
+                loadProducts()  // Recargar los productos después de actualizar
+            }
+        }
+    }
+
     // Convertir un Product a un InventoryItem para la interfaz
     private fun convertToInventoryItem(product: Product): InventoryItem {
         return InventoryItem(

@@ -86,7 +86,7 @@ fun InventoryScreen(
                                 // Lógica para modificar el item
                             },
                             onDelete = { deletedItem ->
-                                // Lógica para eliminar el item
+                                inventoryViewModel.deleteProduct(item.id)
                             }
                         )
                     }
@@ -99,6 +99,7 @@ fun InventoryScreen(
 
 @Composable
 fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDelete: (InventoryItem) -> Unit) {
+    val inventoryViewModel: InventoryViewModel = viewModel()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,7 +149,9 @@ fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDel
                 Spacer(modifier = Modifier.width(8.dp)) // Espacio entre los botones
 
                 Button(
-                    onClick = { onDelete(item) },
+                    onClick = {
+                        onDelete(item)
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = DeleteButton100
                     ),

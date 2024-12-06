@@ -9,7 +9,7 @@ import retrofit2.Response
 
 class ProductRepository {
 
-    // Obtener todos los productos
+    // Método para obtener todos los productos
     suspend fun getAllProducts(): List<Product>? {
         return withContext(Dispatchers.IO) {
             try {
@@ -26,7 +26,7 @@ class ProductRepository {
         }
     }
 
-    // Agregar un nuevo producto
+    // Método para actualizar un producto
     suspend fun updateProduct(product: InventoryItem): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -38,6 +38,7 @@ class ProductRepository {
             }
         }
     }
+    // Método para agregar un producto
     suspend fun addProduct(product: Product): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -47,6 +48,20 @@ class ProductRepository {
                 e.printStackTrace()
                 false
             }
+        }
+    }
+    // Método para eliminar un producto
+    suspend fun deleteProduct(productId: String): Boolean {
+        return try {
+            // Realiza la solicitud DELETE a la API
+            val response = RetrofitInstance.api.deleteProduct(productId)
+
+            // Verificar si la respuesta fue exitosa
+            response.isSuccessful
+        } catch (e: Exception) {
+            // Manejo de errores
+            e.printStackTrace()
+            false
         }
     }
 
