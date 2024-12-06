@@ -119,6 +119,10 @@ fun AddProductForm(
     // Filtrar productos por código de barras
     val filteredProducts = productList.filter { it.codigo_barras.contains(codigo_barras, ignoreCase = true) }
 
+    // Estados para mostrar el Snackbar
+    var showSnackbar by remember { mutableStateOf(false) }
+    var snackbarMessage by remember { mutableStateOf("") }
+
     // Mostrar el formulario
     Dialog(onDismissRequest = { onDismiss() }) {
         Surface(
@@ -135,18 +139,20 @@ fun AddProductForm(
                 // Dropdown con ExposedDropdownMenuBox
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
+                    onExpandedChange = { expanded = it } // Solo cambia el estado cuando se hace clic
                 ) {
                     OutlinedTextField(
                         value = codigo_barras,
                         onValueChange = {
+                            // Solo actualizamos el texto, no cambiamos expanded directamente
                             codigo_barras = it
-                            expanded = true // Abre el dropdown al escribir
                         },
                         label = { Text("Código de Barras") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .menuAnchor()
+                            .menuAnchor(),
+                        // Cuando el usuario toca el campo, solo entonces se abre el dropdown
+                        readOnly = false
                     )
                     ExposedDropdownMenu(
                         expanded = expanded,
@@ -154,14 +160,15 @@ fun AddProductForm(
                     ) {
                         filteredProducts.forEach { product ->
                             DropdownMenuItem(
-                                text = { Text(product.codigo_barras) },
+                                text = { Text(product.nombre) },  // Mostrar nombre del producto
                                 onClick = {
+                                    // Al seleccionar el item, llenamos los campos
                                     codigo_barras = product.codigo_barras
                                     cantidad = product.cantidad.toString()
                                     descripcion = product.descripcion
                                     nombre = product.nombre
                                     isUpdate = true
-                                    expanded = false
+                                    expanded = false // Cerramos el dropdown después de seleccionar
                                 }
                             )
                         }
@@ -212,6 +219,8 @@ fun AddProductForm(
                                     fecha_actualizacion = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(Date())
                                 )
                                 inventoryViewModel.updateProduct(updatedProduct)
+                                snackbarMessage = "Producto actualizado correctamente"
+                                showSnackbar = true
                             } else {
                                 // Crear nuevo producto si no existe
                                 val newProduct = Product(
@@ -223,6 +232,8 @@ fun AddProductForm(
                                     nombre = nombre
                                 )
                                 inventoryViewModel.addProduct(newProduct)
+                                snackbarMessage = "Producto agregado correctamente"
+                                showSnackbar = true
                             }
                             onDismiss()
                         },
@@ -234,6 +245,17 @@ fun AddProductForm(
             }
         }
     }
+    // Mostrar Snackbar si showSnackbar es verdadero
+    if (showSnackbar) {
+        Snackbar(
+            action = {
+                TextButton(onClick = { showSnackbar = false }) {
+                    Text("Cerrar")
+                }
+            },
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(snackbarMessage)
+        }
+    }
 }
-
-
