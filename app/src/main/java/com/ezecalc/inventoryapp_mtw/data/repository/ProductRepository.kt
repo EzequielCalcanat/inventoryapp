@@ -7,10 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-class ProductRepository {
+open class ProductRepository {
 
     // Método para obtener todos los productos
-    suspend fun getAllProducts(): List<Product>? {
+    open suspend fun getAllProducts(): List<Product>? {
         return withContext(Dispatchers.IO) {
             try {
                 val response: Response<List<Product>> = RetrofitInstance.api.getAllProducts()

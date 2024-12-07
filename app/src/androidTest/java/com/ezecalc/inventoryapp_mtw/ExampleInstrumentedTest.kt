@@ -1,5 +1,14 @@
 package com.ezecalc.inventoryapp_mtw
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -20,5 +29,15 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.ezecalc.inventoryapp_mtw", appContext.packageName)
+    }
+
+
+    @Test
+    fun testStringResource() {
+        // Obtener el contexto de la aplicación
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val appName = appContext.getString(R.string.app_name)
+
+        assertEquals("Inventory App", appName)
     }
 }

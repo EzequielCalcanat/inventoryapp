@@ -25,10 +25,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppContent() {
-    // Aquí manejamos el estado del tema
     var isDarkThemeEnabled by remember { mutableStateOf(false) }
 
-    // Aplicamos el tema
     InventoryApp_MTWTheme(darkTheme = isDarkThemeEnabled) {
         NavigationDrawerApp(
             isDarkThemeEnabled = isDarkThemeEnabled,
