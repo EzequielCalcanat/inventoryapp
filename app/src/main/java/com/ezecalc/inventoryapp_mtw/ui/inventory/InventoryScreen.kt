@@ -132,10 +132,14 @@ fun ProductDetailsDialog(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 HorizontalDivider()
-                Text(text = "Código de Barras: ${product.codigo_barras}", style = MaterialTheme.typography.bodyLarge)
-                Text(text = "Nombre: ${product.nombre}", style = MaterialTheme.typography.bodyLarge)
-                Text(text = "Cantidad: ${product.cantidad}", style = MaterialTheme.typography.bodyLarge)
-                Text(text = "Descripción: ${product.descripcion}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Código de Barras", style = MaterialTheme.typography.titleMedium)
+                Text(text = " ${product.codigo_barras}")
+                Text(text = "Nombre", style = MaterialTheme.typography.titleMedium)
+                Text(text = product.nombre)
+                Text(text = "Cantidad", style = MaterialTheme.typography.titleMedium)
+                Text(text = "${product.cantidad}")
+                Text(text = "Descripción", style = MaterialTheme.typography.titleMedium)
+                Text(text = product.descripcion)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -353,7 +357,7 @@ fun AddProductForm(
                 OutlinedTextField(
                     value = cantidad,
                     onValueChange = { cantidad = it },
-                    label = { Text(if (existingProduct!= null) "Cantidad a Agregar" else "Cantidad") },
+                    label = { Text("Cantidad") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
