@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,6 +33,7 @@ import com.ezecalc.inventoryapp_mtw.ui.theme.EditButton100
 import java.text.SimpleDateFormat
 import java.util.Date
 
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InventoryScreen(
@@ -102,10 +105,11 @@ fun InventoryScreen(
     }
 }
 
+@Preview
 @Composable
 fun ProductDetailsDialog(
-    product: InventoryItem,
-    onDismiss: () -> Unit
+    product: InventoryItem = InventoryItem(),
+    onDismiss: () -> Unit = {}
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -148,8 +152,13 @@ fun ProductDetailsDialog(
 }
 
 
+@Preview
 @Composable
-fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDelete: (InventoryItem) -> Unit) {
+fun InventoryItemRow(
+    item: InventoryItem = InventoryItem(),
+    onClick: (InventoryItem) -> Unit = {},
+    onDelete: (InventoryItem) -> Unit = {}
+) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditForm by remember { mutableStateOf(false) }
     Card(
@@ -252,11 +261,11 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
 
 
 
-
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProductForm(
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit = {},
     inventoryViewModel: InventoryViewModel = viewModel(),
     existingProduct: InventoryItem? = null
 ) {

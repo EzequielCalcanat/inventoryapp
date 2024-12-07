@@ -9,14 +9,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ezecalc.inventoryapp_mtw.R
 
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    isDarkThemeEnabled: Boolean,
-    onThemeChange: (Boolean) -> Unit
+    isDarkThemeEnabled: Boolean = false,
+    onThemeChange: (Boolean) -> Unit = {}
 ) {
 
     Scaffold(

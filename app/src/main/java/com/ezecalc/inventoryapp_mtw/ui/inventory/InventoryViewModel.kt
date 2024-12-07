@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 data class InventoryItem(
-    val id: String,
-    val nombre: String,
-    val cantidad: Int,
-    val codigo_barras: String,
-    val descripcion: String,
-    val fecha_actualizacion: String
+    val id: String = "0",
+    val nombre: String = "Producto desconocido",
+    val descripcion: String = "Descripción no disponible",
+    val cantidad: Int = 0,
+    val codigo_barras: String = "",
+    val fecha_actualizacion: String = "2024-01-01"
 ) {
 }
 
