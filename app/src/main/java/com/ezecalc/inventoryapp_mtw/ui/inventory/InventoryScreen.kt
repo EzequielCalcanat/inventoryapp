@@ -49,6 +49,7 @@ fun InventoryScreen(
     // Puedes agregar una variable de estado para manejar la carga o posibles errores
     val isLoading = inventoryItems.value.isEmpty()
     var showAddProductForm by remember { mutableStateOf(false) }
+    var selectedProduct by remember { mutableStateOf<InventoryItem?>(null) }
 
     Scaffold(
         topBar = {
@@ -89,6 +90,7 @@ fun InventoryScreen(
                         val item = inventoryItems.value[index]
                         InventoryItemRow(
                             item = item,
+                            onClick = { selectedProduct = item },
                             onDelete = { deletedItem ->
                                 inventoryViewModel.deleteProduct(item.id)
                             }
@@ -99,16 +101,65 @@ fun InventoryScreen(
 
         }
     }
+    selectedProduct?.let { product ->
+        ProductDetailsDialog(
+            product = product,
+            onDismiss = { selectedProduct = null }
+        )
+    }
 }
 
 @Composable
-fun InventoryItemRow(item: InventoryItem, onDelete: (InventoryItem) -> Unit) {
+fun ProductDetailsDialog(
+    product: InventoryItem,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            tonalElevation = 10.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "Detalles del Producto",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                HorizontalDivider()
+                Text(text = "Código de Barras: ${product.codigo_barras}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Nombre: ${product.nombre}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Cantidad: ${product.cantidad}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Descripción: ${product.descripcion}", style = MaterialTheme.typography.bodyLarge)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text("Cerrar")
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDelete: (InventoryItem) -> Unit) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showEditForm by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onClick(item) }
     ) {
         Column(
             modifier = Modifier
