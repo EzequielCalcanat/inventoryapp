@@ -1,5 +1,7 @@
 package com.ezecalc.inventoryapp_mtw.ui.inventory
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -86,9 +89,6 @@ fun InventoryScreen(
                         val item = inventoryItems.value[index]
                         InventoryItemRow(
                             item = item,
-                            onEdit = { editedItem ->
-                                // Lógica para modificar el item
-                            },
                             onDelete = { deletedItem ->
                                 inventoryViewModel.deleteProduct(item.id)
                             }
@@ -102,8 +102,9 @@ fun InventoryScreen(
 }
 
 @Composable
-fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDelete: (InventoryItem) -> Unit) {
-    val inventoryViewModel: InventoryViewModel = viewModel()
+fun InventoryItemRow(item: InventoryItem, onDelete: (InventoryItem) -> Unit) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showEditForm by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,7 +135,7 @@ fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDel
             ) {
                 // Botón de Modificar (azul)
                 Button(
-                    onClick = { onEdit(item) },
+                    onClick = { showEditForm = true },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = EditButton100
                     ),
@@ -152,25 +153,55 @@ fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDel
                 Spacer(modifier = Modifier.width(8.dp)) // Espacio entre los botones
 
                 Button(
-                    onClick = {
-                        onDelete(item)
-                    },
+                    onClick = { showDeleteDialog = true }, // Mostrar el diálogo
                     colors = ButtonDefaults.buttonColors(
                         containerColor = DeleteButton100
                     ),
                     modifier = Modifier
                         .height(36.dp)
                         .padding(vertical = 4.dp),
-                    shape = MaterialTheme.shapes.small // Borde redondeado pequeño
+                    shape = MaterialTheme.shapes.small
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Eliminar",
-                        tint = Color.White // Icono blanco
+                        tint = Color.White
                     )
                 }
             }
         }
+    }
+    // Diálogo de eliminación
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Eliminar Producto") },
+            text = { Text("¿Estás seguro de querer eliminar el producto?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDelete(item) // Llamar a la función de eliminación
+                        showDeleteDialog = false // Cerrar el diálogo
+                    }
+                ) {
+                    Text("Eliminar", color = DeleteButton100)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false } // Cerrar el diálogo
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+    if (showEditForm) {
+        AddProductForm(
+            onDismiss = { showEditForm = false },
+            inventoryViewModel = viewModel(),
+            existingProduct = item
+        )
     }
 }
 
@@ -181,13 +212,18 @@ fun InventoryItemRow(item: InventoryItem, onEdit: (InventoryItem) -> Unit, onDel
 @Composable
 fun AddProductForm(
     onDismiss: () -> Unit,
-    inventoryViewModel: InventoryViewModel = viewModel()
+    inventoryViewModel: InventoryViewModel = viewModel(),
+    existingProduct: InventoryItem? = null
 ) {
+    var actualProduct: InventoryItem? = null
+    if(existingProduct != null) {
+        actualProduct = existingProduct
+    }
     // Estados para los campos del formulario
-    var cantidad by remember { mutableStateOf("") }
-    var codigo_barras by remember { mutableStateOf("") }
-    var descripcion by remember { mutableStateOf("") }
-    var nombre by remember { mutableStateOf("") }
+    var cantidad by remember { mutableStateOf(existingProduct?.cantidad?.toString() ?: "") }
+    var codigo_barras by remember { mutableStateOf(existingProduct?.codigo_barras ?: "") }
+    var descripcion by remember { mutableStateOf(existingProduct?.descripcion ?: "") }
+    var nombre by remember { mutableStateOf(existingProduct?.nombre ?: "") }
     var isUpdate by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) } // Controla la expansión del dropdown
 
@@ -266,7 +302,7 @@ fun AddProductForm(
                 OutlinedTextField(
                     value = cantidad,
                     onValueChange = { cantidad = it },
-                    label = { Text("Cantidad") },
+                    label = { Text(if (existingProduct!= null) "Cantidad a Agregar" else "Cantidad") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
@@ -298,12 +334,29 @@ fun AddProductForm(
                     }
                     Button(
                         onClick = {
-                            val existingProduct = productList.find { it.codigo_barras == codigo_barras }
-                            if (existingProduct != null) {
-                                // Actualizar cantidad si el producto ya existe
-                                val updatedProduct = existingProduct.copy(
-                                    cantidad = existingProduct.cantidad + cantidad.toInt(),
-                                    fecha_actualizacion = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(Date())
+                            /*
+                            * Esta condición sirve para validar que recibimos un item desde la
+                            * función, si no recibimos nada, quiere decir que el Dialog se
+                            * abrió desde agregar producto, por lo que es necesario validar
+                            * el código de barras para obtener el producto y utilizarlo
+                            * para actualizarlo (sumando la cantidad)
+                            * */
+                            if (existingProduct == null) {
+                                actualProduct = productList.find { it.codigo_barras == codigo_barras }
+                            }
+                            if (existingProduct != null || actualProduct != null) {
+                                var qty: Int = 0
+                                if (existingProduct != null) {
+                                    qty = cantidad.toInt()
+                                } else {
+                                    qty = actualProduct!!.cantidad + cantidad.toInt()
+                                }
+                                val updatedProduct = actualProduct!!.copy(
+                                    cantidad = qty,
+                                    codigo_barras = codigo_barras,
+                                    descripcion = descripcion,
+                                    fecha_actualizacion = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(Date()),
+                                    nombre = nombre
                                 )
                                 inventoryViewModel.updateProduct(updatedProduct)
                                 snackbarMessage = "Producto actualizado correctamente"
