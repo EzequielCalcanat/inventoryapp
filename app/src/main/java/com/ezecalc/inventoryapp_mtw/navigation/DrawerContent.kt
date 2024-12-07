@@ -56,7 +56,7 @@ fun DrawerContent(navController: NavHostController, onCloseDrawer: () -> Unit) {
                     onCloseDrawer()
                 }
             )
-            DrawerItem(text =  stringResource(id = R.string.product_name), icon = Icons.Default.ShoppingCart,
+            DrawerItem(text =  stringResource(id = R.string.inventory_name), icon = Icons.Default.ShoppingCart,
                 onClick = {
                     navController.navigate("profile")
                     onCloseDrawer()

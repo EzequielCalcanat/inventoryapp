@@ -259,8 +259,6 @@ fun InventoryItemRow(
     }
 }
 
-
-
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -273,6 +271,7 @@ fun AddProductForm(
     if(existingProduct != null) {
         actualProduct = existingProduct
     }
+
     // Estados para los campos del formulario
     var cantidad by remember { mutableStateOf(existingProduct?.cantidad?.toString() ?: "") }
     var codigo_barras by remember { mutableStateOf(existingProduct?.codigo_barras ?: "") }
@@ -293,6 +292,16 @@ fun AddProductForm(
     // Estados para mostrar el Snackbar
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
+
+    // Validación de los campos del formulario
+    fun isFormValid(): Boolean {
+        val isCantidadValid = cantidad.toIntOrNull() != null && cantidad.toInt() > 0
+        val isCodigoBarrasValid = codigo_barras.isNotEmpty()
+        val isDescripcionValid = descripcion.isNotEmpty()
+        val isNombreValid = nombre.isNotEmpty()
+
+        return isCantidadValid && isCodigoBarrasValid && isDescripcionValid && isNombreValid
+    }
 
     // Mostrar el formulario
     Dialog(onDismissRequest = { onDismiss() }) {
@@ -317,7 +326,7 @@ fun AddProductForm(
                         onValueChange = {
                             codigo_barras = it
                         },
-                        label = { Text( stringResource(id = R.string.product_barcode)) },
+                        label = { Text(stringResource(id = R.string.product_barcode)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor(),
@@ -341,8 +350,9 @@ fun AddProductForm(
                         }
                     }
                 }
+
                 Text(
-                    text =  stringResource(id = R.string.scan_barcode),
+                    text = stringResource(id = R.string.scan_barcode),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)
@@ -356,7 +366,7 @@ fun AddProductForm(
                 OutlinedTextField(
                     value = cantidad,
                     onValueChange = { cantidad = it },
-                    label = { Text( stringResource(id = R.string.product_quantity)) },
+                    label = { Text(stringResource(id = R.string.product_quantity)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
@@ -364,16 +374,17 @@ fun AddProductForm(
                 OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
-                    label = { Text( stringResource(id = R.string.product_details)) },
+                    label = { Text(stringResource(id = R.string.product_details)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text( stringResource(id = R.string.product_name)) },
+                    label = { Text(stringResource(id = R.string.product_name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 // Botones para guardar o cancelar
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -383,17 +394,10 @@ fun AddProductForm(
                         onClick = { onDismiss() },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text( stringResource(id = R.string.cancel_button))
+                        Text(stringResource(id = R.string.cancel_button))
                     }
                     Button(
                         onClick = {
-                            /*
-                            * Esta condición sirve para validar que recibimos un item desde la
-                            * función, si no recibimos nada, quiere decir que el Dialog se
-                            * abrió desde agregar producto, por lo que es necesario validar
-                            * el código de barras para obtener el producto y utilizarlo
-                            * para actualizarlo (sumando la cantidad)
-                            * */
                             if (existingProduct == null) {
                                 actualProduct = productList.find { it.codigo_barras == codigo_barras }
                             }
@@ -430,6 +434,7 @@ fun AddProductForm(
                             }
                             onDismiss()
                         },
+                        enabled = isFormValid(),  // El botón solo estará habilitado si el formulario es válido
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(if (isUpdate) stringResource(id = R.string.update_button) else stringResource(id = R.string.add_button))
@@ -438,6 +443,7 @@ fun AddProductForm(
             }
         }
     }
+
     // Mostrar Snackbar si showSnackbar es verdadero
     if (showSnackbar) {
         Snackbar(
