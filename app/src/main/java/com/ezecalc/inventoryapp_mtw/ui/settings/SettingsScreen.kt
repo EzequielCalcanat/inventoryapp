@@ -16,7 +16,6 @@ fun SettingsScreen(
     isDarkThemeEnabled: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
-    val isNotificationsEnabled = remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -32,13 +31,6 @@ fun SettingsScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            SettingSwitch(
-                label = "Habilitar notificaciones",
-                checked = isNotificationsEnabled.value,
-                onCheckedChange = { isNotificationsEnabled.value = it }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             SettingSwitch(
                 label = "Tema oscuro",
@@ -48,12 +40,6 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Restablecer configuración")
-            }
         }
     }
 }
