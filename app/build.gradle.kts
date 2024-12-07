@@ -7,6 +7,20 @@ android {
     namespace = "com.ezecalc.inventoryapp_mtw"
     compileSdk = 34
 
+    flavorDimensions += "environment"
+
+    productFlavors{
+        create("dev") {
+            dimension = "environment"
+            resValue("string", "app_name", "Inventory App Dev")
+        }
+
+        create("prod") {
+            dimension = "environment"
+            resValue("string", "app_name", "Inventory App Prod")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.ezecalc.inventoryapp_mtw"
         minSdk = 24
