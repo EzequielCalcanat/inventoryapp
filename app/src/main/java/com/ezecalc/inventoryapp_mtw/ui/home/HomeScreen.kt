@@ -10,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ezecalc.inventoryapp_mtw.R
 import com.ezecalc.inventoryapp_mtw.data.model.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +34,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Productos a Agotarse") }
+                title = { Text(stringResource(id = R.string.home_title)) }
             )
         }
     ) { padding ->
@@ -55,7 +57,7 @@ fun HomeScreen(
                 }
                 lowStockProducts.isEmpty() -> {
                     Text(
-                        text = "No hay productos con inventario bajo.",
+                        text = stringResource(id = R.string.empty_inventory),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -99,7 +101,7 @@ fun ProductItem(product: Product) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Cantidad: ${product.cantidad}",
+                text = stringResource(id = R.string.product_quantity) + ": ${product.cantidad}",
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(4.dp))

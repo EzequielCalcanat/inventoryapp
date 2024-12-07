@@ -9,8 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.ezecalc.inventoryapp_mtw.ui.MainScreen
-import com.ezecalc.inventoryapp_mtw.ui.home.HomeScreen
+import com.ezecalc.inventoryapp_mtw.ui.NavigationDrawerApp
 import com.ezecalc.inventoryapp_mtw.ui.theme.InventoryApp_MTWTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +30,7 @@ fun AppContent() {
 
     // Aplicamos el tema
     InventoryApp_MTWTheme(darkTheme = isDarkThemeEnabled) {
-        MainScreen(
+        NavigationDrawerApp(
             isDarkThemeEnabled = isDarkThemeEnabled,
             onThemeChange = { isDarkThemeEnabled = it }
         )

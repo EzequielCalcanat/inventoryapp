@@ -8,7 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ezecalc.inventoryapp_mtw.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,7 +22,7 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Configuraciones") }
+                title = {  Text(stringResource(id = R.string.main_title)) }
             )
         }
     ) { paddingValues ->
@@ -33,7 +35,7 @@ fun SettingsScreen(
         ) {
 
             SettingSwitch(
-                label = "Tema oscuro",
+                label =  stringResource(id = R.string.theme_checkbox),
                 checked = isDarkThemeEnabled,
                 onCheckedChange = onThemeChange
             )

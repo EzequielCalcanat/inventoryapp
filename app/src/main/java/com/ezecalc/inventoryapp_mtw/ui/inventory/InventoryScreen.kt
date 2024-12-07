@@ -1,10 +1,6 @@
 package com.ezecalc.inventoryapp_mtw.ui.inventory
 
-import android.app.AlertDialog
-import android.content.DialogInterface
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,19 +18,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ezecalc.inventoryapp_mtw.R
 import com.ezecalc.inventoryapp_mtw.data.model.Product
-import com.ezecalc.inventoryapp_mtw.ui.theme.DarkGray40
 import com.ezecalc.inventoryapp_mtw.ui.theme.DeleteButton100
 import com.ezecalc.inventoryapp_mtw.ui.theme.EditButton100
-import com.ezecalc.inventoryapp_mtw.ui.theme.LihtGray40
-import com.ezecalc.inventoryapp_mtw.ui.theme.Pink40
-import com.ezecalc.inventoryapp_mtw.ui.theme.PurpleGrey40
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -54,11 +47,11 @@ fun InventoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Inventario") },
+                title = { Text( stringResource(id = R.string.inventory_name)) },
                 actions = {
                     // Botón para mostrar el formulario
                     IconButton(onClick = { showAddProductForm = true }) {
-                        Icon(Icons.Default.Add, contentDescription = "Agregar Producto")
+                        Icon(Icons.Default.Add, contentDescription =  stringResource(id = R.string.add_product))
                     }
                 }
             )
@@ -127,18 +120,18 @@ fun ProductDetailsDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Detalles del Producto",
+                    text =  stringResource(id = R.string.product_details),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 HorizontalDivider()
-                Text(text = "Código de Barras", style = MaterialTheme.typography.titleMedium)
+                Text(text =  stringResource(id = R.string.product_barcode), style = MaterialTheme.typography.titleMedium)
                 Text(text = " ${product.codigo_barras}")
-                Text(text = "Nombre", style = MaterialTheme.typography.titleMedium)
+                Text(text =  stringResource(id = R.string.product_name), style = MaterialTheme.typography.titleMedium)
                 Text(text = product.nombre)
-                Text(text = "Cantidad", style = MaterialTheme.typography.titleMedium)
+                Text(text =  stringResource(id = R.string.product_quantity), style = MaterialTheme.typography.titleMedium)
                 Text(text = "${product.cantidad}")
-                Text(text = "Descripción", style = MaterialTheme.typography.titleMedium)
+                Text(text =  stringResource(id = R.string.product_description), style = MaterialTheme.typography.titleMedium)
                 Text(text = product.descripcion)
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -147,7 +140,7 @@ fun ProductDetailsDialog(
                     onClick = onDismiss,
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text("Cerrar")
+                    Text( stringResource(id = R.string.close_button))
                 }
             }
         }
@@ -179,8 +172,6 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
                 Text(text = item.nombre, style = MaterialTheme.typography.titleMedium)
                 Text(text = "${item.cantidad}", style = MaterialTheme.typography.titleMedium)
             }
-
-            // Espacio vacío para empujar los botones hacia abajo
             Spacer(modifier = Modifier.height(16.dp))
 
             // Row para los botones Modificar y Eliminar
@@ -188,7 +179,7 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Botón de Modificar (azul)
+                // Modificar
                 Button(
                     onClick = { showEditForm = true },
                     colors = ButtonDefaults.buttonColors(
@@ -197,16 +188,15 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
                     modifier = Modifier
                         .height(36.dp)
                         .padding(vertical = 4.dp),
-                    shape = MaterialTheme.shapes.small // Borde redondeado pequeño
+                    shape = MaterialTheme.shapes.small
                 ) {
                     Icon(
                         imageVector = Icons.Default.Create,
-                        contentDescription = "Modificar",
+                        contentDescription =  stringResource(id = R.string.update_button),
                         tint = Color.White
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp)) // Espacio entre los botones
-
+                Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = { showDeleteDialog = true }, // Mostrar el diálogo
                     colors = ButtonDefaults.buttonColors(
@@ -219,7 +209,7 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Eliminar",
+                        contentDescription =  stringResource(id = R.string.delete_button),
                         tint = Color.White
                     )
                 }
@@ -230,8 +220,8 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Eliminar Producto") },
-            text = { Text("¿Estás seguro de querer eliminar el producto?") },
+            title = { Text( stringResource(id = R.string.delete_title)) },
+            text = { Text( stringResource(id = R.string.delete_text)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -239,14 +229,14 @@ fun InventoryItemRow(item: InventoryItem, onClick: (InventoryItem) -> Unit, onDe
                         showDeleteDialog = false // Cerrar el diálogo
                     }
                 ) {
-                    Text("Eliminar", color = DeleteButton100)
+                    Text( stringResource(id = R.string.delete_button), color = DeleteButton100)
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDeleteDialog = false } // Cerrar el diálogo
                 ) {
-                    Text("Cancelar")
+                    Text( stringResource(id = R.string.cancel_button))
                 }
             }
         )
@@ -282,6 +272,9 @@ fun AddProductForm(
     var isUpdate by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) } // Controla la expansión del dropdown
 
+    val update_message = stringResource(id = R.string.update_alert)
+    val added_message = stringResource(id = R.string.added_alert)
+
     // Estado para la lista de productos existentes
     val productList = inventoryViewModel.inventoryItems.collectAsState().value
 
@@ -315,7 +308,7 @@ fun AddProductForm(
                         onValueChange = {
                             codigo_barras = it
                         },
-                        label = { Text("Código de Barras") },
+                        label = { Text( stringResource(id = R.string.product_barcode)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor(),
@@ -340,14 +333,11 @@ fun AddProductForm(
                     }
                 }
                 Text(
-                    text = "Escanear Código de barras",
+                    text =  stringResource(id = R.string.scan_barcode),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)
-                        .clickable {
-
-                            println("Hola")
-                        },
+                        .clickable {},
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.End
@@ -357,7 +347,7 @@ fun AddProductForm(
                 OutlinedTextField(
                     value = cantidad,
                     onValueChange = { cantidad = it },
-                    label = { Text("Cantidad") },
+                    label = { Text( stringResource(id = R.string.product_quantity)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
@@ -365,17 +355,16 @@ fun AddProductForm(
                 OutlinedTextField(
                     value = descripcion,
                     onValueChange = { descripcion = it },
-                    label = { Text("Descripción") },
+                    label = { Text( stringResource(id = R.string.product_details)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
-                    label = { Text("Nombre") },
+                    label = { Text( stringResource(id = R.string.product_name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 // Botones para guardar o cancelar
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -385,7 +374,7 @@ fun AddProductForm(
                         onClick = { onDismiss() },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Cancelar")
+                        Text( stringResource(id = R.string.cancel_button))
                     }
                     Button(
                         onClick = {
@@ -414,7 +403,7 @@ fun AddProductForm(
                                     nombre = nombre
                                 )
                                 inventoryViewModel.updateProduct(updatedProduct)
-                                snackbarMessage = "Producto actualizado correctamente"
+                                snackbarMessage = update_message
                                 showSnackbar = true
                             } else {
                                 // Crear nuevo producto si no existe
@@ -427,14 +416,14 @@ fun AddProductForm(
                                     nombre = nombre
                                 )
                                 inventoryViewModel.addProduct(newProduct)
-                                snackbarMessage = "Producto agregado correctamente"
+                                snackbarMessage = added_message
                                 showSnackbar = true
                             }
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(if (isUpdate) "Actualizar" else "Agregar")
+                        Text(if (isUpdate) stringResource(id = R.string.update_button) else stringResource(id = R.string.add_button))
                     }
                 }
             }
@@ -445,7 +434,7 @@ fun AddProductForm(
         Snackbar(
             action = {
                 TextButton(onClick = { showSnackbar = false }) {
-                    Text("Cerrar")
+                    Text(stringResource(id = R.string.close_button))
                 }
             },
             modifier = Modifier.padding(16.dp)

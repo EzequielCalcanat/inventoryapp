@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">InventoryApp_MTW</string>
+    <string name="app_name">Inventory App</string>
+    <string name="main_title">Products Inventory</string>
+    <string name="home_name">Home</string>
+    <string name="inventory_name">Inventory</string>
+    <string name="settings_name">Settings</string>
+    <string name="home_title">Products Out of Stock</string>
+    <string name="inventory_title">Inventory</string>
+    <string name="settings_title">Settings</string>
+    <string name="theme_checkbox">Dark Mode</string>
+    <string name="product_name">Name</string>
+    <string name="product_quantity">Quantity</string>
+    <string name="product_description">Description</string>
+    <string name="product_barcode">Barcode</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="add_button">Add</string>
+    <string name="delete_title">Delete Product</string>
+    <string name="delete_text">Are you sure you want to delete this product?</string>
+    <string name="delete_button">Delete</string>
+    <string name="add_product">Add Product</string>
+    <string name="product_details">Product Details</string>
+    <string name="close_button">Close</string>
+    <string name="update_button">Update</string>
+    <string name="update_alert">Product Updated Succesfully</string>
+    <string name="added_alert">Product Added Successfully</string>
+    <string name="empty_inventory">There\'s not products to show</string>
 </resources>
